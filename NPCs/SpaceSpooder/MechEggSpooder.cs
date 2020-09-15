@@ -12,9 +12,9 @@ namespace NovaEdge.NPCs.SpaceSpooder{
         //public override string Texture => "Terraria/Item_6";
         public override void SetDefaults(){
             npc.aiStyle = -1;
-            npc.width = 24;
-            npc.height = 24;
-            npc.scale = 1.5f;
+            npc.width = 48;
+            npc.height = 69;
+            npc.scale = 0.8f;
             npc.damage = 0;
             npc.lifeMax = 800;
             npc.knockBackResist = 0f;
@@ -32,6 +32,9 @@ namespace NovaEdge.NPCs.SpaceSpooder{
             npc.TargetClosest();
             Move();
             npc.ai[0]++;
+            if(npc.ai[0] == 1){
+                rand = Main.rand.Next(1 , 3);
+            }
             if(npc.ai[0] > 160){
                 for(int a = 0; a < 2; a++){
                 int dustIndex = Dust.NewDust(npc.position, npc.width, npc.height, 1);
@@ -40,25 +43,38 @@ namespace NovaEdge.NPCs.SpaceSpooder{
 				
             }
             if(npc.ai[0] == 180){
-                HoverMineSpawn();
+                WeaverSpawn();
                 npc.life = 0;
 
             }
            
         }
+        public int rand = 0;
          private void Move(){
              if(npc.HasValidTarget && Main.netMode != NetmodeID.MultiplayerClient){
                 Vector2 pos = npc.Center;
-                Vector2 targetPos = Main.player[npc.target].Center;
-                Vector2 direction = targetPos - pos;
-                direction.Normalize();
-                npc.velocity.X = direction.X;
-                npc.velocity.Y = direction.Y;
+                //Vector2 targetPos = Main.player[npc.target].Center;
+                Vector2 weaverPos = Vector2.Zero;
+                for(int i= 0; i < 200; i++){
+                    if(Main.npc[i].type == ModContent.NPCType<SpaceSpooder>() && Main.npc[i].active){
+                        weaverPos = Main.npc[i].Center;
+                        switch(rand){
+                            case 1:
+                            npc.velocity = new Vector2(weaverPos.X , weaverPos.Y + 160f) - pos;
+                            break;
+                            case 2:
+                            npc.velocity = new Vector2(weaverPos.X , weaverPos.Y - 160f) - pos;
+                            break;
+                        }
+                        
+                    }
+                }
+
                 
             }
         
          }
-        private void HoverMineSpawn(){
+        private void WeaverSpawn(){
             if(npc.HasValidTarget && Main.netMode != NetmodeID.MultiplayerClient){
                 /*Vector2 pos = npc.Center;
                 Vector2 targetPos = Main.player[npc.target].Center;

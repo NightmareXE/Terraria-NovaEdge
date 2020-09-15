@@ -16,7 +16,7 @@ namespace NovaEdge.NPCs.SpaceSpooder{
         //public override string Texture => "Terraria/NPC_" + NPCID.BlackRecluse;
         public override void SetDefaults(){
             npc.aiStyle = -1;
-            npc.lifeMax = 600;
+            npc.lifeMax = 450;
             npc.width = 70;
             npc.height = 70;
             //drawOffsetX = -20;
@@ -27,21 +27,25 @@ namespace NovaEdge.NPCs.SpaceSpooder{
             npc.noGravity = true;
             npc.damage = 50;
             npc.lavaImmune = true;
-            npc.noTileCollide = false;
+            npc.noTileCollide = true;
             npc.defense = 10;
             npc.scale = 1f;
         }
         public override void AI(){
+            if(npc.ai[0] == 1){
+                rand = Main.rand.Next(1, 3);
+            }
             npc.TargetClosest();
             npc.ai[0]++;
+            Formation();
             if(npc.ai[0] < 300){
-                Move();
+                //Move();
                 if(npc.ai[0] == 150){
                     LeShootFast();
                 }
             }
             else if(npc.ai[0] > 300 && npc.ai[0] < 600){
-                Charge();
+                //Charge();
                 if(npc.ai[0] == 500){
                     LeShoot();
                 }
@@ -49,10 +53,40 @@ namespace NovaEdge.NPCs.SpaceSpooder{
             }
             
             if(npc.ai[0] > 600){
-                npc.ai[0] = 0;
+                npc.ai[0] = 3;
             }
             
 
+        }
+        public int rand = 0;
+        private void Formation(){
+            if(npc.HasValidTarget && Main.netMode != NetmodeID.MultiplayerClient){
+                Vector2 npcPos = npc.Center;
+                Vector2 weaverPos = Vector2.Zero;
+                Vector2 direction = Main.player[npc.target].Center - npcPos;
+                direction.Normalize();
+                npc.rotation = direction.ToRotation();
+
+                for(int i = 0;i < 200;i++){
+                    if(Main.npc[i].type == ModContent.NPCType<SpaceSpooder>() && Main.npc[i].active){
+                        weaverPos = Main.npc[i].Center;
+                        switch(rand){
+                            case 1:
+                            npc.velocity = new Vector2(weaverPos.X , weaverPos.Y + 160f) - npcPos;
+                            break;
+                            case 2:
+                            npc.velocity = new Vector2(weaverPos.X , weaverPos.Y - 160f) - npcPos;
+                            break;
+                            case 3:
+                            npc.velocity = new Vector2(weaverPos.X  + 160f , weaverPos.Y) - npcPos;
+                            break;
+
+                        }
+                        
+                    } 
+                }
+                
+            }
         }
         private void LeShootFast(){
         

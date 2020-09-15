@@ -11,11 +11,14 @@ namespace NovaEdge.NPCs.SpaceSpooder{
     public class HoverMine : ModProjectile{
          public override void SetStaticDefaults(){
             ProjectileID.Sets.Homing[projectile.type] = true;
+            Main.projFrames[projectile.type] = 2;
+
         }
         public override void SetDefaults(){
             
-            projectile.width = projectile.height = 15;
+            projectile.width = projectile.height = 16;
             projectile.hostile = true;
+            projectile.scale = 2.2f;
             projectile.penetrate = 1;
             projectile.timeLeft = 180;
             drawOffsetX = 5;
@@ -29,7 +32,9 @@ namespace NovaEdge.NPCs.SpaceSpooder{
 
         public override void AI(){
             TargetWhoAmI++;
+            
             if(TargetWhoAmI >= MAX_TIME){
+                projectile.frame = 1;
                 if(projectile.localAI[0] == 0f){
                 AdjustMagnitude(ref projectile.velocity);
 				projectile.localAI[0] = 1f;
@@ -132,5 +137,6 @@ namespace NovaEdge.NPCs.SpaceSpooder{
                 return true;
             }
         }*/
+        
     }
 }

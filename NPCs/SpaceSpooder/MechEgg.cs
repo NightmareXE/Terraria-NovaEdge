@@ -12,10 +12,10 @@ namespace NovaEdge.NPCs.SpaceSpooder{
         //public override string Texture => "Terraria/Item_6";
         public override void SetDefaults(){
             npc.aiStyle = -1;
-            npc.width = 24;
-            npc.height = 24;
+            npc.width = 48;
+            npc.height = 69;
             npc.damage = 0;
-            npc.scale = 1.5f;
+            npc.scale = 0.8f;
 
             npc.lifeMax = 800;
             npc.knockBackResist = 0f;
@@ -69,7 +69,7 @@ namespace NovaEdge.NPCs.SpaceSpooder{
                 Vector2 direction = targetPos - pos;
                 direction.Normalize();
                 //npc.velocity *= 0;
-                int type = ModContent.ProjectileType<HoverMine>();
+                int type = ModContent.ProjectileType<Projectiles.HoverMineFriendly>();
                 int damage = npc.damage;
                 Vector2 speedA = new Vector2(direction.X , direction.Y);
                 Projectile.NewProjectile(pos , speedA  , type , damage , 0f , Main.myPlayer);
