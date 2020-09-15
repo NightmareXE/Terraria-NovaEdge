@@ -23,6 +23,7 @@ namespace NovaEdge {
         public bool frostburn;  
         public bool livelyWood;     
         public bool steelDefense;
+        public bool martianIncubator;  //i should sort these and half of them are unused
 
 
         
@@ -40,6 +41,7 @@ namespace NovaEdge {
             frostburn = false;
             livelyWood = false;
             steelDefense = false;
+            martianIncubator = false;
             
             
 
@@ -71,6 +73,11 @@ namespace NovaEdge {
         public override void ModifyHitByNPC(NPC npc , ref int damage , ref bool crit){
             if(cursedBurn){
                 damage =(int)(damage * 1.15f);
+            }
+            if(martianIncubator && damage > 30){
+                NPC.NewNPC((int)(npc.Center.X + 160f) , (int)npc.Center.Y , NPCType<NPCs.SpaceSpooder.MechEgg>());
+                NPC.NewNPC((int)(npc.Center.X - 160f) , (int)npc.Center.Y , NPCType<NPCs.SpaceSpooder.MechEgg>());
+
             }
         }
         public override void ModifyHitNPC(Item item , NPC target , ref int damage , ref float knockback , ref bool crit){
