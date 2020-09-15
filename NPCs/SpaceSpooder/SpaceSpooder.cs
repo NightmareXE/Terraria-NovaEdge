@@ -7,7 +7,10 @@ using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 
 namespace NovaEdge.NPCs.SpaceSpooder{
+	    [AutoloadBossHead]
+
     public class SpaceSpooder : ModNPC{
+
         public bool StartDash;
         public bool stunned;
         public Vector2 playerPos;
@@ -62,6 +65,7 @@ namespace NovaEdge.NPCs.SpaceSpooder{
         
         public override void AI(){  //START DASH Being jank
             npc.TargetClosest();
+            npc.netUpdate = true;
             npc.dontTakeDamage = false;
             //Dust.NewDustPerfect(npc.Left , 6 , Vector2.Zero , 0 , Color.Purple , 1f);
             //npc.frameCounter++;
@@ -95,25 +99,28 @@ namespace NovaEdge.NPCs.SpaceSpooder{
                 
             //}
             
-            float dist =  Vector2.Distance(targetPos , pos);
+           
             
             
             
             npc.ai[0]++;
+            /*if(dist > 1600){
+                npc.ai[4]++;
+                if(npc.ai[4] == 60){
+                    npc.position = new Vector2(Main.player[npc.target].Center.X , Main.player[npc.target].Center.Y + 512f);
+                }*/
+                //npc.position = new Vector(Main.player[npc.target].Center.X , Main.player[npc.target].Center.Y + 512f)           }
             if(npc.ai[0] < 300){
                 SpawnDash();
             }
-            
-                
-            
-            else if(npc.ai[0] < 525 && npc.ai[0] > 300){
+            else if(npc.ai[0] < 555 && npc.ai[0] > 300){
                 
                 Move();
-                if(npc.ai[0] % 45 == 0){
+                if(npc.ai[0] % 45 == 0 && npc.ai[0] > 360 && npc.ai[0] < 525){
                     LaserBurst();
                 }
             }
-            else if(npc.ai[0] > 525 && npc.ai[0] < 705){
+            else if(npc.ai[0] > 555 && npc.ai[0] < 735){
                 BurstDash();
                 if(npc.ai[1] > 60){
                     npc.ai[1] = 0;
@@ -182,22 +189,23 @@ namespace NovaEdge.NPCs.SpaceSpooder{
                 if(npc.ai[2] < 540 && npc.ai[2] > 300){
                     Move();
                     //npc.velocity *= 1.2f;
-                    if(npc.ai[2] % 60 == 0){
+                    if(npc.ai[2] % 60 == 0 && npc.ai[2] > 360){
                         LaserCircle();
                     }
                 }
-                if(npc.ai[2] > 540 && npc.ai[2] < 900){
+                if(npc.ai[2] > 600 && npc.ai[2] < 960){
                     LaserSpin();
                 }
-                else if(npc.ai[2] > 900 && npc.ai[2] < 950){
-                    if(npc.ai[2] == 920){
+                else if(npc.ai[2] > 960 && npc.ai[2] < 1010){
+                    if(npc.ai[2] == 980){
                         WeaverSpawn();
                     }
                     npc.velocity *= 0.05f;
                 }
-                else if(npc.ai[2] > 950){
+                else if(npc.ai[2] > 1010){
                     npc.ai[2] = 301;
                 }
+            
 
             }
             
@@ -210,7 +218,10 @@ namespace NovaEdge.NPCs.SpaceSpooder{
                 npc.ai[3]++;
                 int type = 83;
                 int damage = npc.damage/3;
-                 Vector2 targetPos = Main.player[npc.target].Center;
+                //int signX = Math.Sign(Main.player[npc.target].velocity.X);
+                //int signY = Math.Sign(Main.player[npc.target].velocity.Y);
+
+                 Vector2 targetPos = new  Vector2(Main.player[npc.target].Center.X  , Main.player[npc.target].Center.Y );
                 //int sign = Math.Sign(Main.player[npc.target].velocity.X);
                
                 //npc.position.X = targetPos.X + (sign * 640f);
@@ -220,7 +231,7 @@ namespace NovaEdge.NPCs.SpaceSpooder{
                 Vector2 pos = npc.Center;
                 Vector2 direction = targetPos - pos;
                 direction.Normalize();
-                float rot = direction.ToRotation() * 0.9f;
+                float rot = direction.ToRotation();
                 npc.rotation = rot;
                 if(npc.ai[2] > 899){
                     npc.rotation = direction.ToRotation();
@@ -234,7 +245,8 @@ namespace NovaEdge.NPCs.SpaceSpooder{
                 Projectile.NewProjectile(pos , speedA * 14f  , type , damage/2 , 0f , Main.myPlayer);
                 //}
                 }
-            }
+             }
+            
         }
         /*private void RunAway(){
              if(npc.HasValidTarget && Main.netMode != NetmodeID.MultiplayerClient){
@@ -301,8 +313,8 @@ namespace NovaEdge.NPCs.SpaceSpooder{
                 for(int i = 0; i <= 2; i++){
                 Vector2 speedA = new Vector2(direction.X , direction.Y).RotatedByRandom(MathHelper.ToRadians(359));
                 Projectile.NewProjectile(pos , speedA  , type , damage , 0f , Main.myPlayer);}*/
-                NPC.NewNPC((int)(npc.Center.X + 160) , (int)npc.Center.Y , ModContent.NPCType<MechEggSpooder>());
-                NPC.NewNPC((int)(npc.Center.X - 160) , (int)npc.Center.Y , ModContent.NPCType<MechEggSpooder>());
+                //NPC.NewNPC((int)(npc.Center.X + 160) , (int)npc.Center.Y , ModContent.NPCType<MechEggSpooder>());
+                NPC.NewNPC((int)(npc.Center.X) , (int)(npc.Center.Y - 160f), ModContent.NPCType<MechEggSpooder>());
                 NPC.NewNPC((int)npc.Center.X , (int)(npc.Center.Y + 160f) , ModContent.NPCType<MechEggSpooder>());
             }
         }
@@ -311,7 +323,20 @@ namespace NovaEdge.NPCs.SpaceSpooder{
                 Vector2 pos = npc.Center;
                 Vector2 targetPos = Main.player[npc.target].Center;
                 Vector2 direction = targetPos - pos;
-                Vector2 dustPos = pos;
+                Vector2 dustPos = new Vector2(targetPos.X , targetPos.Y - 320f);
+                float dist =  Vector2.Distance(targetPos , pos);
+                if(dist > 1600f){
+                    npc.ai[3]++;
+                    if(npc.ai[3] < 60){
+                        for(int i = 0; i <2 ; i++){
+                            Dust.NewDustDirect(dustPos , npc.width , npc.height , 27);
+                        }
+                    }
+                    if(npc.ai[3] == 60){
+                         npc.position = dustPos;
+                    }
+                }
+                
                 
                 //int dustIndex = Dust.NewDustPerfect(Vector2 npc.Left , int type = 6 , Vector2? Velocity = null , int Alpha, Color newColor = Color.Purple , float scale = 1f);
                 
@@ -322,7 +347,7 @@ namespace NovaEdge.NPCs.SpaceSpooder{
                 direction.Normalize();
                 npc.velocity.X = direction.X * 5;
                 npc.velocity.Y = direction.Y * 5;
-                float rot = npc.velocity.ToRotation() * 0.8f;
+                float rot = npc.velocity.ToRotation();
                 npc.rotation = rot;
              }
             
@@ -340,10 +365,7 @@ namespace NovaEdge.NPCs.SpaceSpooder{
                 float dist =  Vector2.Distance(targetPos , pos);
                 if(dist < 160f){
                     npc.velocity *= 0.05f;
-                    SpawnDashDone = true;
-                    if(npc.life <= npc.lifeMax/5){
-                        SpawnDashDone2 = true;
-                    }
+                    npc.ai[0] = 300;
 
 
                 }
@@ -383,9 +405,11 @@ namespace NovaEdge.NPCs.SpaceSpooder{
                     //playerPos = Main.player[npc.target].Center;
                     //NPCpos = npc.Center;
                 //}
+                int signX = Math.Sign(Main.player[npc.target].velocity.X);
+                int sign = Math.Sign(Main.player[npc.target].velocity.Y);
                 
                 Vector2 pos = new Vector2(npc.Center.X + 40 , npc.Center.Y);
-                Vector2 targetPos = Main.player[npc.target].Center;
+                Vector2 targetPos = new Vector2(Main.player[npc.target].Center.X + (signX * 64f), Main.player[npc.target].Center.Y + (64f * sign));
                 Vector2 direction = targetPos - pos;
                 direction.Normalize();
                 //npc.velocity *= 0;
@@ -422,7 +446,7 @@ namespace NovaEdge.NPCs.SpaceSpooder{
                     //Vector2 speedA = new Vector2(direction.X , direction.Y).RotatedBy(MathHelper.ToRadians(359));
                     spread += MathHelper.ToRadians(60);
                     Vector2 speedA = new Vector2(direction.X , direction.Y).RotatedBy(spread);
-                    Projectile.NewProjectile(pos , speedA * 9f  , type , damage/2 , 0f , Main.myPlayer);
+                    
                 }
 
             }
@@ -478,6 +502,7 @@ namespace NovaEdge.NPCs.SpaceSpooder{
 			return null;
 		}
         //DR for spinny phase
+    
 
 
 
