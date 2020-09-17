@@ -8,8 +8,10 @@ using System.Collections.Generic;
 using System.IO;
 using Terraria.Utilities;
 
-namespace NovaEdge {
-    public class NovaEdgePlayer : ModPlayer{
+namespace NovaEdge
+{
+    public class NovaEdgePlayer : ModPlayer
+    {
         public bool testMinion;
         public int timer = 0;
         public int maxStealth = 100;
@@ -20,16 +22,18 @@ namespace NovaEdge {
         public int mythrilEnrageLVL;
         public bool cursedBurn;
         public bool burn;
-        public bool frostburn;  
-        public bool livelyWood;     
+        public bool frostburn;
+        public bool livelyWood;
         public bool steelDefense;
         public bool martianIncubator;  //i should sort these and half of them are unused
 
+        public int milkywayBootsJumpTimerMax = 0;
+        public int milkywayBootsJumpTimer = 0;
 
-        
 
 
-        public override void ResetEffects(){
+        public override void ResetEffects()
+        {
             testMinion = false;
             isStealthFull = false;
             stealth = 0;
@@ -42,19 +46,38 @@ namespace NovaEdge {
             livelyWood = false;
             steelDefense = false;
             martianIncubator = false;
-            
-            
+
+            milkywayBootsJumpTimerMax = 0;
 
         }
-        public virtual void Stealth(Player player){ //ATTEMPT AT MAKING STEALTH , CURRENTLY POST PONED FOR LATER ECH
-        stealth += 3;
-            if(stealth >= maxStealth){
+
+        public override void PostUpdate()
+        {
+            if (milkywayBootsJumpTimerMax > 0)
+            {
+                if (milkywayBootsJumpTimer > 0) milkywayBootsJumpTimer--;
+                else if (!player.jumpAgainCloud)
+                {
+                    milkywayBootsJumpTimer = milkywayBootsJumpTimerMax;
+                    player.jumpAgainCloud = true;
+                }
+            }
+            
+        }
+
+        public virtual void Stealth(Player player)
+        { //ATTEMPT AT MAKING STEALTH , CURRENTLY POST PONED FOR LATER ECH
+            stealth += 3;
+            if (stealth >= maxStealth)
+            {
                 isStealthFull = true;
-                if(stealthStrikeDone){
+                if (stealthStrikeDone)
+                {
                     isStealthFull = false;
                 }
             }
         }
+
         /*public override void Update(Player player){
             if(steelDefense){
                 int index = player.FindBuffIndex(BuffType<Buffs.SteelDefense>());
@@ -65,33 +88,42 @@ namespace NovaEdge {
                 }
             }
         }*/
-        public override void PostHurt(bool pvp , bool quiit , double damage , int hitDirection , bool crit){
-            if(mythrilEnrage){
-                player.AddBuff(BuffType<MythrilGuard>() , 600);
+        public override void PostHurt(bool pvp, bool quiit, double damage, int hitDirection, bool crit)
+        {
+            if (mythrilEnrage)
+            {
+                player.AddBuff(BuffType<MythrilGuard>(), 600);
             }
         }
-        public override void ModifyHitByNPC(NPC npc , ref int damage , ref bool crit){
-            if(cursedBurn){
-                damage =(int)(damage * 1.15f);
+        public override void ModifyHitByNPC(NPC npc, ref int damage, ref bool crit)
+        {
+            if (cursedBurn)
+            {
+                damage = (int)(damage * 1.15f);
             }
-            if(martianIncubator && damage > 30){
-                NPC.NewNPC((int)(npc.Center.X + 160f) , (int)npc.Center.Y , NPCType<NPCs.SpaceSpooder.MechEgg>());
-                NPC.NewNPC((int)(npc.Center.X - 160f) , (int)npc.Center.Y , NPCType<NPCs.SpaceSpooder.MechEgg>());
+            if (martianIncubator && damage > 30)
+            {
+                NPC.NewNPC((int)(npc.Center.X + 160f), (int)npc.Center.Y, NPCType<NPCs.SpaceSpooder.MechEgg>());
+                NPC.NewNPC((int)(npc.Center.X - 160f), (int)npc.Center.Y, NPCType<NPCs.SpaceSpooder.MechEgg>());
 
             }
         }
-        public override void ModifyHitNPC(Item item , NPC target , ref int damage , ref float knockback , ref bool crit){
-            if(livelyWood && Main.rand.NextBool(4)){
-                target.AddBuff(186 , 300); //165 is Dryads Bane lel
+        public override void ModifyHitNPC(Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
+        {
+            if (livelyWood && Main.rand.NextBool(4))
+            {
+                target.AddBuff(186, 300); //165 is Dryads Bane lel
             }
         }
-        public override void ModifyHitNPCWithProj(Projectile proj , NPC target , ref int damage , ref float knockback , ref bool crit , ref int hitDirection){
-            if(livelyWood && Main.rand.NextBool(4)){
-                target.AddBuff(186 , 300); //165 is Dryads Bane lel
+        public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        {
+            if (livelyWood && Main.rand.NextBool(4))
+            {
+                target.AddBuff(186, 300); //165 is Dryads Bane lel
             }
         }
-        
-        
+
+
     }
-    
+
 }
