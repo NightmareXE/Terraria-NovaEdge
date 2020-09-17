@@ -31,13 +31,29 @@ namespace NovaEdge.NPCs.SpaceSpooder{
             npc.defense = 10;
             npc.scale = 1f;
         }
+        int count = 0;
         public override void AI(){
-            if(npc.ai[0] == 1){
-                rand = Main.rand.Next(1, 3);
-            }
+            
             npc.TargetClosest();
             npc.ai[0]++;
-            Formation();
+            if(npc.ai[0] == 1){
+                for(int a = 0; a < 200; a++){
+                if(Main.npc[a].type == ModContent.NPCType<VacuumWalker>() && Main.npc[a].active){
+                    
+                    count++;
+                     
+                }
+            }
+            }
+            
+            if(count <= 2){
+                Formation();
+            }
+            else{
+                Move();
+            }
+            
+           
             if(npc.ai[0] < 300){
                 //Move();
                 if(npc.ai[0] == 150){
@@ -58,7 +74,8 @@ namespace NovaEdge.NPCs.SpaceSpooder{
             
 
         }
-        public int rand = 0;
+        
+        
         private void Formation(){
             if(npc.HasValidTarget && Main.netMode != NetmodeID.MultiplayerClient){
                 Vector2 npcPos = npc.Center;
@@ -70,17 +87,17 @@ namespace NovaEdge.NPCs.SpaceSpooder{
                 for(int i = 0;i < 200;i++){
                     if(Main.npc[i].type == ModContent.NPCType<SpaceSpooder>() && Main.npc[i].active){
                         weaverPos = Main.npc[i].Center;
-                        switch(rand){
+                        
+                        switch(count){
                             case 1:
                             npc.velocity = new Vector2(weaverPos.X , weaverPos.Y + 160f) - npcPos;
                             break;
                             case 2:
                             npc.velocity = new Vector2(weaverPos.X , weaverPos.Y - 160f) - npcPos;
                             break;
-                            case 3:
+                            /*case 3:
                             npc.velocity = new Vector2(weaverPos.X  + 160f , weaverPos.Y) - npcPos;
-                            break;
-
+                            break;*/
                         }
                         
                     } 
@@ -134,7 +151,6 @@ namespace NovaEdge.NPCs.SpaceSpooder{
                 
                 
                     //Vector2 speedA = new Vector2(direction.X , direction.Y).RotatedByRandom(MathHelper.ToRadians(3));
-
                     Projectile.NewProjectile(pos , direction * 12f  , type , damage , 0f , Main.myPlayer);
             }  
         }

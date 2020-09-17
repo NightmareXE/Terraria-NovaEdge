@@ -28,12 +28,18 @@ namespace NovaEdge.NPCs.SpaceSpooder{
                 npc.buffImmune[j] = true;
             }
         }
+        int count = 0;
         public override void AI(){
             npc.TargetClosest();
             Move();
             npc.ai[0]++;
             if(npc.ai[0] == 1){
-                rand = Main.rand.Next(1 , 3);
+                for(int a = 0; a < 200; a++){
+                if(Main.npc[a].type == ModContent.NPCType<VacuumWalker>() && Main.npc[a].active){
+                    
+                    count++;
+                }
+                }
             }
             if(npc.ai[0] > 160){
                 for(int a = 0; a < 2; a++){
@@ -49,7 +55,7 @@ namespace NovaEdge.NPCs.SpaceSpooder{
             }
            
         }
-        public int rand = 0;
+        //public int rand = 0;
          private void Move(){
              if(npc.HasValidTarget && Main.netMode != NetmodeID.MultiplayerClient){
                 Vector2 pos = npc.Center;
@@ -58,7 +64,7 @@ namespace NovaEdge.NPCs.SpaceSpooder{
                 for(int i= 0; i < 200; i++){
                     if(Main.npc[i].type == ModContent.NPCType<SpaceSpooder>() && Main.npc[i].active){
                         weaverPos = Main.npc[i].Center;
-                        switch(rand){
+                        switch(count){
                             case 1:
                             npc.velocity = new Vector2(weaverPos.X , weaverPos.Y + 160f) - pos;
                             break;

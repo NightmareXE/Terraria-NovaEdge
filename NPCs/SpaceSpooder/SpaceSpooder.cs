@@ -374,6 +374,15 @@ namespace NovaEdge.NPCs.SpaceSpooder{
                 
             }
         }
+        /*private void CircleMotion(){
+             if(npc.HasValidTarget && Main.netMode != NetmodeID.MultiplayerClient){
+
+                 npc.ai[3] += 0.05f;
+                 Vector2 circle = Main.player[npc.target].Center + new Vector2(0 , 320).RotatedBy(npc.ai[3]);
+                 npc.Center = circle;
+             }
+            
+        }*/
         private void BurstDash(){
              if(npc.HasValidTarget && Main.netMode != NetmodeID.MultiplayerClient){
                 npc.ai[1]++;
@@ -446,6 +455,7 @@ namespace NovaEdge.NPCs.SpaceSpooder{
                     //Vector2 speedA = new Vector2(direction.X , direction.Y).RotatedBy(MathHelper.ToRadians(359));
                     spread += MathHelper.ToRadians(60);
                     Vector2 speedA = new Vector2(direction.X , direction.Y).RotatedBy(spread);
+                    Projectile.NewProjectile(pos , speedA * 15, type , damage/2 , 1f , Main.myPlayer);
                     
                 }
 
