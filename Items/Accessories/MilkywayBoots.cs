@@ -9,8 +9,7 @@ using Terraria.ModLoader;
 
 namespace NovaEdge.Items.Accessories
 {
-    //TODO doesn't count as Wings yet; needs the 4-frame wing spritesheet (or some way to bypass it)
-    //[AutoloadEquip(EquipType.Wings)]
+    [AutoloadEquip(EquipType.Wings, EquipType.Shoes)]
     class MilkywayBoots : ModItem
     {
         public override void SetStaticDefaults()
@@ -24,9 +23,9 @@ namespace NovaEdge.Items.Accessories
 
         public override void SetDefaults()
         {
-            //TODO this sprite is enormous when dropped
-            item.width = 63;
-            item.height = 61;
+            
+            item.width = 40;
+            item.height = 32;
             item.accessory = true;
         }
 
