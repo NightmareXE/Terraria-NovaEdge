@@ -15,7 +15,7 @@ namespace NovaEdge.Items.Accessories
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Milkyway Boots");
-            Tooltip.SetDefault("Grants infinite boosted jumps; counts as Wings" +
+            Tooltip.SetDefault("Grants infinite boosted auto-jumps; counts as Wings" +
                 "\nGrants a quick dash forward; allows fast movement and sprinting" +
                 "\nAllows walking on liquids and complete control on ice" +
                 "\nGrants 7 seconds of lava immunity");
@@ -23,7 +23,6 @@ namespace NovaEdge.Items.Accessories
 
         public override void SetDefaults()
         {
-            
             item.width = 40;
             item.height = 32;
             item.accessory = true;
@@ -37,16 +36,24 @@ namespace NovaEdge.Items.Accessories
             recipe.AddIngredient(ItemID.Tabi);
             recipe.AddIngredient(ItemID.FrostsparkBoots);
             recipe.AddIngredient(ItemID.LavaWaders);
+            recipe.AddIngredient(ItemID.MartianConduitPlating, 50);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
+            //Don't use wing flying, TODO remove gliding if desired
+            player.wingTimeMax = 0;
+
             //Double jump effects
             player.GetModPlayer<NovaEdgePlayer>().milkywayBootsJumpTimerMax = 20;
             player.doubleJumpCloud = true;
             player.jumpBoost = true;
+
+            //Frog leg effects
+            player.jumpSpeedBoost += 2.4f;
+            player.autoJump = true;
 
             //Tabi effects
             player.dash = 1;
