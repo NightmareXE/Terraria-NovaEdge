@@ -10,7 +10,7 @@ namespace NovaEdge.Items.Weapons{
         public int i = 0;
         public override void SetDefaults(){
 
-            projectile.width = projectile.height = 38;
+            projectile.width = projectile.height = 100;
             projectile.melee = true;
             
             projectile.ignoreWater =true;
@@ -19,8 +19,9 @@ namespace NovaEdge.Items.Weapons{
             projectile.aiStyle = 3;
             projectile.friendly = true;
             projectile.netUpdate = true;
-            drawOffsetX = 15;
-			drawOriginOffsetY = 15;
+           // drawOffsetX = 15;
+			//drawOriginOffsetY = 15;
+            //projectile.extraUpdates = 1;
             
             //aiType = ProjectileID.PaladinsHammer;
 
@@ -30,12 +31,14 @@ namespace NovaEdge.Items.Weapons{
         }
        
         public override void AI(){
-             
-              projectile.rotation += 0.5f;
+            //projectile.velocity = projectile.velocity * 1.5;
+
+            //projectile.rotation += 0.5f;
+            Dust.NewDustDirect(projectile.position, projectile.width, projectile.height, 150);
             Lighting.AddLight(projectile.Center , 1.1f , 0.5f , 0.5f);
            
         }
-        public override bool PreDraw(SpriteBatch spriteBatch  , Color lightColor ){
+        /*public override bool PreDraw(SpriteBatch spriteBatch  , Color lightColor ){
             Vector2 drawOrigin = new Vector2(Main.projectileTexture[projectile.type].Width  * 0.5f , projectile.height * 0.5f);
             for(int e = 0; e < projectile.oldPos.Length; e++){
                 Vector2 drawPos = projectile.oldPos[e] - Main.screenPosition + drawOrigin +  new Vector2(0f , projectile.gfxOffY);
@@ -44,7 +47,7 @@ namespace NovaEdge.Items.Weapons{
 
             }
             return true;
-        }
+        }*/
         public override void Kill(int timeLeft){
             Collision.HitTiles(projectile.position + projectile.velocity , projectile.velocity , projectile.width , projectile.height);
 
