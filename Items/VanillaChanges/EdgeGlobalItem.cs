@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using Terraria.Utilities;
 using Terraria.Localization;
+using System.Linq;
 
 namespace NovaEdge.Items.VanillaChanges{
     public class Balance : GlobalItem
