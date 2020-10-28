@@ -242,7 +242,7 @@ namespace NovaEdge.Projectiles{
 		}
 
 		public override void Kill(int timeLeft) {
-			Main.PlaySound(0, (int)projectile.position.X, (int)projectile.position.Y); // Play a death sound
+			Main.PlaySound(SoundID.Dig, (int)projectile.position.X, (int)projectile.position.Y); // Play a death sound
 			Vector2 Pos = projectile.position; // Position to use for dusts
 			
 			// Please note the usage of MathHelper, please use this!

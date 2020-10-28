@@ -3,7 +3,7 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using static Terraria.ModLoader.ModContent;
 using Microsoft.Xna.Framework;
-using NovaEdge.NPCs;
+using NovaEdge.NPCs.GlobalNPCStuff;
 
 namespace NovaEdge.Buffs{
     public class Deflourished : ModBuff{

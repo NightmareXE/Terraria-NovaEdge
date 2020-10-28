@@ -4,18 +4,24 @@ using Microsoft.Xna.Framework;
 using Terraria.Localization;
 using System;
 using Terraria.ModLoader;
-using static Terraria.ModLoader.ModContent;
+//using static Terraria.ModLoader.ModContent;
 
 
 
-namespace NovaEdge.NPCs.GrumpyStumpy{
-    public class GrumpyStumpy : ModNPC{
-        public override void SetStaticDefaults(){
+namespace NovaEdge.NPCs.GrumpyStumpy
+{
+    [AutoloadBossHead]
+    public class GrumpyStumpy : ModNPC
+    {
+        private bool thorns = false;
+        public override void SetStaticDefaults()
+        {
             DisplayName.SetDefault("Living Guardian");
             Main.npcFrameCount[npc.type] = 1;  //12 idle , 13 atk
             //failed attempt at animation , sheets are dank
         }
-        public override void SetDefaults(){
+        public override void SetDefaults()
+        {
             npc.aiStyle = -1;
             npc.width = 210;
             npc.height = 120;
@@ -23,139 +29,186 @@ namespace NovaEdge.NPCs.GrumpyStumpy{
             npc.lifeMax = 3000;
             npc.knockBackResist = 0f;
             npc.damage = 15;
-            
+
             npc.defense = 5;
             npc.npcSlots = 3f;
             npc.boss = true;
             npc.HitSound = SoundID.NPCHit1;
-			npc.DeathSound = null;
-			npc.alpha = 0;
+            npc.DeathSound = null;
+            npc.alpha = 0;
             npc.noGravity = false;
             //npc.value = 10334f;
             npc.lavaImmune = true;
             npc.noTileCollide = false;
 
-            for(int j = 0; j < npc.buffImmune.Length; j++){
+            for (int j = 0; j < npc.buffImmune.Length; j++)
+            {
                 npc.buffImmune[j] = true;
             }
             music = MusicID.Plantera;
-			musicPriority = MusicPriority.BossMedium;  
+            musicPriority = MusicPriority.BossMedium;
 
             /* Stat details:
             thorns return 80% dmg , does 0 contact , 15 leaf crystal and 12 thorns*/
-            
+
 
         }
-        public override void ScaleExpertStats(int numPlayera , float bossLifeScale){
+        public override void ScaleExpertStats(int numPlayera, float bossLifeScale)
+        {
             npc.lifeMax = (int)(npc.lifeMax * 0.75f * bossLifeScale);
             npc.damage = (int)(npc.damage * 0.65f);
-            
-            
+
+
         }
         public bool attack;
-        public override void AI(){
+        public override void AI()
+        {
             npc.TargetClosest();
             attack = false;
-            
-            float dist =  Vector2.Distance(Main.player[npc.target].Center , npc.Center);
-            if(dist > 960f){
-                if(Main.player[npc.target].HasBuff(ModContent.BuffType<Buffs.Rooted>())){
-                    Main.player[npc.target].ClearBuff(ModContent.BuffType<Buffs.Rooted>());
+            Player player = Main.player[npc.target];
+            thorns = false;
+
+            float dist = Vector2.Distance(player.Center, npc.Center);
+            if (dist > 960f)
+            {
+                if (player.HasBuff(ModContent.BuffType<Buffs.Rooted>()))
+                {
+                    player.ClearBuff(ModContent.BuffType<Buffs.Rooted>());
                 }
-                Main.player[npc.target].AddBuff(ModContent.BuffType<Buffs.NaturesFury>() , 60);
+                player.AddBuff(ModContent.BuffType<Buffs.NaturesFury>(), 60);
             }
 
 
             Vector2 npcPos = npc.Center;
-            if(npc.HasValidTarget && Main.netMode != NetmodeID.MultiplayerClient){
-                Vector2 playerPos = Main.player[npc.target].Center;
+            if (npc.HasValidTarget && Main.netMode != NetmodeID.MultiplayerClient)
+            {
+                Vector2 playerPos = player.Center;
             }
-            else{
+            else
+            {
                 Vector2 playerPos = Vector2.Zero;
             }
 
             npc.ai[0]++;
-            if(npc.ai[0] == 60){
-                LeafCrystal();
-                
+            if (npc.ai[0] == 60)
+            {
+                LeafCrystal(new Vector2(npc.Center.X , npc.Center.Y - 128) , 15);
+
             }
 
 
-            if(npc.ai[0] > 270 && npc.ai[0] < 335){
-                if(npc.ai[0] == 300){
-                    ThornLine();
+            if (npc.ai[0] > 270 && npc.ai[0] < 335)
+            {
+                if (npc.ai[0] == 300)
+                {
+                    Shoot(player, new Vector2(player.Center.X, player.Center.Y + 48), 5, 15, 3f, ModContent.ProjectileType<ThornGenerator>(), true);
                 }
                 attack = true;
             }
-            else if(npc.ai[0] > 300 && npc.ai[0] < 540){
-                ThornShroud();
+            else if (npc.ai[0] > 300 && npc.ai[0] < 540)
+            {
+                ThornShroud(player);
             }
-           
 
-            if(npc.ai[0] > 720){
+
+            if (npc.ai[0] > 720)
+            {
                 npc.ai[0] = 0;
             }
-            
+
 
         }
         public int damageTaken = 0;
-        private void LeafCrystal(){
+        private void LeafCrystal(Vector2 spawnPos , int damage)
+        {
             int type = ModContent.ProjectileType<GreenRose>();
-            int damage = npc.damage/2;
-            Vector2 projectilePos = new Vector2(npc.Center.X , npc.Center.Y - 80f);
-            Projectile.NewProjectile(projectilePos , Vector2.Zero , type , damage , 4f , Main.myPlayer);
+            
+            
+            Projectile.NewProjectile(spawnPos, Vector2.Zero, type, damage, 4f, Main.myPlayer);
         }
-        /*private void Teleport(){
-            int sign = Math.Sign(Main.player[npc.target].Center.X - npc.Center.X);
-            if(npc.ai[0] > 540 && npc.ai[0] < 660){
-                for(int i = 0; i < 2; i++){
-                     Dust dust = Dust.NewDustDirect(npc.position , npc.width , npc.height , 57);
+        
+        private void Shoot(Player player , Vector2 spawnPos , float velMult , int damage , float knockBack , int type , bool thornLine = false , bool projectileSpam = false , float projSpamDist = 32 , int projSpamDelay = 0)
+        {
+            if (thornLine)
+            {
+                int sign = Math.Sign(player.Center.X - npc.Center.X);
+                player.AddBuff(ModContent.BuffType<Buffs.Rooted>(), 45);
+                Projectile.NewProjectile(spawnPos, new Vector2(1, 0) * sign * velMult, type, damage, knockBack, player.whoAmI);
+            }
+            else if (projectileSpam)
+            {
+                npc.ai[1]++;
+                Vector2 projPos = new Vector2(Main.rand.NextBool(2) ? player.Center.X + projSpamDist : player.Center.X - projSpamDist, player.Center.Y);
+                Vector2 vel = player.Center - projPos;
+                vel.Normalize();
+                for(int i = 0; i < 2; i++)
+                {
+                    Dust.NewDustPerfect(projPos, DustID.GrassBlades);
+                }
+                if (npc.ai[1] % projSpamDelay == 0)
+                {
+                    
+                    Projectile.NewProjectile(projPos, vel * velMult, type, damage, knockBack, player.whoAmI);
+                }
+
+                if(npc.ai[1] > projSpamDelay)
+                {
+                    npc.ai[1] = 0;
+                    npc.netUpdate = true;
                 }
             }
-            if(npc.ai[0] == 660){
-                npc.position.X = Main.player[npc.target].Center.X + (sign * 320f);
+                
+            else
+            {
+                Vector2 velocity = player.Center - npc.Center;
+                velocity.Normalize();
+                Projectile.NewProjectile(spawnPos, velocity * velMult, type, damage, knockBack, player.whoAmI);
             }
-        }*/
-        private void ThornLine(){
-            int type = ModContent.ProjectileType<ThornGenerator>();
-            int damage = npc.damage * 0;
-            int sign = Math.Sign(Main.player[npc.target].Center.X - npc.Center.X);
-            Vector2 projectilePos = new Vector2(npc.Center.X , npc.Center.Y  + 60f);
-            Vector2 vel = new Vector2(sign * 4 , 0);
-            Main.player[npc.target].AddBuff(ModContent.BuffType<Buffs.Rooted>() , 45);
-            Projectile.NewProjectile(projectilePos , vel  , type , damage , 4f , Main.myPlayer);
         }
-        private void ThornShroud(){
-            for(int i = 0; i <2; i++){
-            Dust dust = Dust.NewDustDirect(npc.position , npc.width , npc.height , 6);
+        private void ThornShroud(Player player)
+        {
+            thorns = true;
+            for (int i = 0; i < 2; i++)
+            {
+                Dust dust = Dust.NewDustDirect(npc.position, npc.width, npc.height, 6);
             }
             npc.defense = 15;
             npc.damage = 12;
 
         }
-        public override void OnHitByItem(Player player , Item item , int damage , float knockback , bool crit){
-            if(npc.ai[0] < 540 && npc.ai[0] > 300){
-                
+        
+        public override void OnHitByItem(Player player, Item item, int damage, float knockback, bool crit)
+        {
+            if (npc.ai[0] < 540 && npc.ai[0] > 300)
+            {
+
                 player.statLife -= (int)(damage * 0.8f);
-                if(player.statLife < 40){
+                if (player.statLife < 40)
+                {
                     player.statLife = 40;
 
                 }
             }
         }
-        public override void OnHitByProjectile(Projectile projectile , int damage ,float knockback , bool crit){
+        public override void OnHitByProjectile(Projectile projectile, int damage, float knockback, bool crit)
+        {
             
-            if(npc.ai[0] < 540 && npc.ai[0] > 300){
-                Main.player[npc.target].statLife -= (int)(damage * 0.8f);
-                if(Main.player[npc.target].statLife < 40){
-                    Main.player[npc.target].statLife = 40;
-                }
+
+            Player player = Main.player[npc.target];
+            //Thorn attack later
+            if (thorns)
+            {
+                player.HurtOld(damage / 2, projectile.direction, false, false, "was pricked to death...");
             }
-            
+
+            //player.Hurt(ByNPC(), damage, projectile.direction * -1);
+
         }
 
-        public override void HitEffect(int hitDirection , double damage){
-            if(npc.life <= 0){
+        public override void HitEffect(int hitDirection, double damage)
+        {
+            if (npc.life <= 0)
+            {
                 Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/GrumpyStumpyGore1"), 2f);
                 Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/GrumpyStumpyGore2"), 2f);
                 Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/GrumpyStumpyGore2"), 2f);
@@ -165,7 +218,7 @@ namespace NovaEdge.NPCs.GrumpyStumpy{
                 Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/GrumpyStumpyGore5"), 2f);
 
 
-                
+
             }
         }
         /*public override void FindFrame(int frameHeight){

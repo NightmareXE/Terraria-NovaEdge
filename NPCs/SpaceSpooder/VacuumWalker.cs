@@ -10,15 +10,15 @@ namespace NovaEdge.NPCs.SpaceSpooder{
     public class VacuumWalker : ModNPC{
         public override void SetStaticDefaults(){
             DisplayName.SetDefault("Vacuum Walker");
-            Main.npcFrameCount[npc.type] = 9;
+            Main.npcFrameCount[npc.type] = 4;
         }
 
         //public override string Texture => "Terraria/NPC_" + NPCID.BlackRecluse;
         public override void SetDefaults(){
             npc.aiStyle = -1;
             npc.lifeMax = 450;
-            npc.width = 70;
-            npc.height = 70;
+            npc.width = 35;
+            npc.height = 35;
             //drawOffsetX = -20;
             npc.knockBackResist = 1f;
             npc.HitSound = SoundID.NPCHit1;
@@ -29,7 +29,7 @@ namespace NovaEdge.NPCs.SpaceSpooder{
             npc.lavaImmune = true;
             npc.noTileCollide = true;
             npc.defense = 10;
-            npc.scale = 1f;
+            npc.scale = 2f;
         }
         int count = 0;
         public override void AI(){
@@ -212,25 +212,6 @@ namespace NovaEdge.NPCs.SpaceSpooder{
             }
              else if(npc.frameCounter < 20){
                 npc.frame.Y = 3 * frameHeight;
-            }
-             else if(npc.frameCounter < 25){
-                npc.frame.Y = 4 * frameHeight;
-            }
-            else if(npc.frameCounter < 30){
-                npc.frame.Y = 5 * frameHeight;
-
-            }
-            else if(npc.frameCounter < 35){
-                npc.frame.Y = 6 * frameHeight;
-
-            }
-            else if(npc.frameCounter < 40){
-                npc.frame.Y = 7 * frameHeight;
-
-            }
-            else if(npc.frameCounter < 45){
-                npc.frame.Y = 8 * frameHeight;
-
             }
             else{
                 npc.frameCounter = 0;
