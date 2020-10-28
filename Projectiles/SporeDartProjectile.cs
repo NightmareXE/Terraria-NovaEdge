@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
+using Terraria.ID;
 
 namespace NovaEdge.Projectiles{
     public class SporeDartProjectile : ModProjectile
@@ -27,7 +28,7 @@ namespace NovaEdge.Projectiles{
             a++;
             Player player = Main.player[projectile.owner];
             if(a == 20){
-                 Projectile.NewProjectile(projectile.Center.X , projectile.Center.Y , 0 , 0 , 567 , 0 , 3f , player.whoAmI);
+                 Projectile.NewProjectile(projectile.Center.X , projectile.Center.Y , 0 , 0 , ProjectileID.SporeTrap , 0 , 3f , player.whoAmI);
                  a = 0;
             }
         }

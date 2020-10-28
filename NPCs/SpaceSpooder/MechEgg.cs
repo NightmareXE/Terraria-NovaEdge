@@ -62,7 +62,6 @@ namespace NovaEdge.NPCs.SpaceSpooder{
         
          }
         private void HoverMineSpawn(){
-            /*
             if(npc.HasValidTarget && Main.netMode != NetmodeID.MultiplayerClient){
                 npc.damage = 60;
                 Vector2 pos = npc.Center;
@@ -75,7 +74,6 @@ namespace NovaEdge.NPCs.SpaceSpooder{
                 Vector2 speedA = new Vector2(direction.X , direction.Y);
                 Projectile.NewProjectile(pos , speedA  , type , damage , 0f , Main.myPlayer);
                 }
-            */
         }
         public override void ScaleExpertStats(int numPlayera , float bossLifeScale){
             npc.lifeMax = (int)(npc.lifeMax * 0.75f * bossLifeScale);
