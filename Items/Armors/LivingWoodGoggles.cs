@@ -13,7 +13,7 @@ namespace NovaEdge.Items.Armors {
 
         }
         public override void SetDefaults(){
-            item.rare = 1;
+            item.rare = ItemRarityID.Blue;
             item.width = 40;
             item.height = 40;
             item.defense = 3;

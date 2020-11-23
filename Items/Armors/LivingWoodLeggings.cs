@@ -12,7 +12,7 @@ namespace NovaEdge.Items.Armors{
             Tooltip.SetDefault("8% increased movement speed \nGives extra movement speed while under the effects of Dryad's Blessing");
         }
         public override void SetDefaults(){
-            item.rare = 1;
+            item.rare = ItemRarityID.Blue;
             item.width = 18;
             item.height = 18;
             item.defense = 1;

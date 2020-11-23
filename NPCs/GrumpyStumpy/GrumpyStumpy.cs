@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Terraria.Localization;
 using System;
 using Terraria.ModLoader;
+using Terraria.DataStructures;
 //using static Terraria.ModLoader.ModContent;
 
 
@@ -14,21 +15,23 @@ namespace NovaEdge.NPCs.GrumpyStumpy
     public class GrumpyStumpy : ModNPC
     {
         private bool thorns = false;
+        private bool attacking = false;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Living Guardian");
-            Main.npcFrameCount[npc.type] = 1;  //12 idle , 13 atk
+            Main.npcFrameCount[npc.type] = 12;  //4 thorns , 4 attack , 4 idle
             //failed attempt at animation , sheets are dank
         }
         public override void SetDefaults()
         {
             npc.aiStyle = -1;
-            npc.width = 210;
-            npc.height = 120;
+            npc.width = 46;
+            npc.height = 50;
             //aiType = NPCID.Zombie;
             npc.lifeMax = 3000;
             npc.knockBackResist = 0f;
             npc.damage = 15;
+            npc.scale = 2.5f;
 
             npc.defense = 5;
             npc.npcSlots = 3f;
@@ -60,11 +63,11 @@ namespace NovaEdge.NPCs.GrumpyStumpy
 
 
         }
-        public bool attack;
+        
         public override void AI()
         {
             npc.TargetClosest();
-            attack = false;
+            attacking = false;
             Player player = Main.player[npc.target];
             thorns = false;
 
@@ -97,15 +100,15 @@ namespace NovaEdge.NPCs.GrumpyStumpy
             }
 
 
-            if (npc.ai[0] > 270 && npc.ai[0] < 335)
+            if (npc.ai[0] > 270 && npc.ai[0] < 330)
             {
                 if (npc.ai[0] == 300)
                 {
                     Shoot(player, new Vector2(player.Center.X, player.Center.Y + 48), 5, 15, 3f, ModContent.ProjectileType<ThornGenerator>(), true);
                 }
-                attack = true;
+                attacking = true;
             }
-            else if (npc.ai[0] > 300 && npc.ai[0] < 540)
+            else if (npc.ai[0] > 330 && npc.ai[0] < 540)
             {
                 ThornShroud(player);
             }
@@ -114,6 +117,7 @@ namespace NovaEdge.NPCs.GrumpyStumpy
             if (npc.ai[0] > 720)
             {
                 npc.ai[0] = 0;
+                npc.netUpdate = true;
             }
 
 
@@ -134,6 +138,7 @@ namespace NovaEdge.NPCs.GrumpyStumpy
                 int sign = Math.Sign(player.Center.X - npc.Center.X);
                 player.AddBuff(ModContent.BuffType<Buffs.Rooted>(), 45);
                 Projectile.NewProjectile(spawnPos, new Vector2(1, 0) * sign * velMult, type, damage, knockBack, player.whoAmI);
+
             }
             else if (projectileSpam)
             {
@@ -168,10 +173,7 @@ namespace NovaEdge.NPCs.GrumpyStumpy
         private void ThornShroud(Player player)
         {
             thorns = true;
-            for (int i = 0; i < 2; i++)
-            {
-                Dust dust = Dust.NewDustDirect(npc.position, npc.width, npc.height, 6);
-            }
+            
             npc.defense = 15;
             npc.damage = 12;
 
@@ -198,10 +200,10 @@ namespace NovaEdge.NPCs.GrumpyStumpy
             //Thorn attack later
             if (thorns)
             {
-                player.HurtOld(damage / 2, projectile.direction, false, false, "was pricked to death...");
+                player.Hurt(PlayerDeathReason.ByNPC(npc.whoAmI), damage, projectile.direction * -1);
+
             }
 
-            //player.Hurt(ByNPC(), damage, projectile.direction * -1);
 
         }
 
@@ -221,50 +223,57 @@ namespace NovaEdge.NPCs.GrumpyStumpy
 
             }
         }
-        /*public override void FindFrame(int frameHeight){
+        int frameIndex = 0;
+        int atkFrameStart = 3;
+        int idleFrameStart = 7;
+        public override void FindFrame(int frameHeight){
             npc.frameCounter++;
-            if(npc.frameCounter < 5){
-                npc.frame.Y = 0 * frameHeight;
+            if (attacking)
+            {
+                
+                if (npc.frameCounter % 15 == 0)
+                {
+                    atkFrameStart++;
+                }
+                if(atkFrameStart > 7)
+                {
+                    atkFrameStart = 4;
+                }
+                npc.frame.Y = atkFrameStart * frameHeight;
+
             }
-            else if(npc.frameCounter < 5){
-                npc.frame.Y = 1 * frameHeight;
+            else if (thorns)
+            {
+                npc.frame.Y = frameIndex * frameHeight;
+                if (npc.frameCounter % 15 == 0)
+                {
+                    frameIndex++;
+                }
+                if (frameIndex > 3)
+                {
+                    frameIndex = 3;
+                }
+
             }
-            else if(npc.frameCounter < 10){
-                npc.frame.Y = 2 * frameHeight;
+            else
+            {
+                npc.frame.Y = idleFrameStart * frameHeight;
+                if (npc.frameCounter % 15 == 0)
+                {
+                    idleFrameStart++;
+                }
+                if (idleFrameStart > 11)
+                {
+                    idleFrameStart = 8;
+                }
+
             }
-            else if(npc.frameCounter < 15){
-                npc.frame.Y = 3 * frameHeight;
-            }
-            else if(npc.frameCounter < 20){
-                npc.frame.Y = 4 * frameHeight;
-            }
-            else if(npc.frameCounter < 25){
-                npc.frame.Y = 5 * frameHeight;
-            }
-            else if(npc.frameCounter < 30){
-                npc.frame.Y = 6 * frameHeight;
-            }
-            else if(npc.frameCounter < 35){
-                npc.frame.Y = 7 * frameHeight;
-            }
-            else if(npc.frameCounter < 40){
-                npc.frame.Y = 8 * frameHeight;
-            }
-            else if(npc.frameCounter < 45){
-                npc.frame.Y = 9 * frameHeight;
-            }
-            else if(npc.frameCounter < 50){
-                npc.frame.Y = 10 * frameHeight;
-            }
-            else if(npc.frameCounter < 55){
-                npc.frame.Y = 11 * frameHeight;
-            }
-            else{
-                npc.frameCounter = 0;
-            }
-            
 
 
-        }*/
+
+
+
+
+        }
     }
 }

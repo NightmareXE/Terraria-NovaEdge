@@ -7,19 +7,19 @@ namespace NovaEdge.Items.Weapons{
     public class SixShooter : ModItem{
         public override void SetDefaults(){
             item.damage = 57;
-            item.rare = 4;
+            item.rare = ItemRarityID.LightRed;
             item.width = 28;
             item.height = 26;
             item.value = 6000000;
             item.useTime = 33;
             item.useAnimation = 33;
-            item.useStyle = 5;
+            item.useStyle = ItemUseStyleID.HoldingOut;
             item.knockBack = 5.9f;
             item.crit = 8;
             item.UseSound =  SoundID.Item11;
             item.useAmmo = AmmoID.Bullet;
             item.ranged = true;
-            item.shoot = 10;
+            item.shoot = ProjectileID.PurificationPowder;
             item.shootSpeed = 9f;
             item.noMelee = true;
 

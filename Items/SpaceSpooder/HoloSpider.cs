@@ -4,7 +4,6 @@ using Terraria.ID;
 
 namespace NovaEdge.Items.SpaceSpooder{
     public class HoloSpider : ModItem{
-        public override string Texture => "Terraria/Item_" + ItemID.SpiderStaff;
 
         public override void SetStaticDefaults(){
             DisplayName.SetDefault("Holo-Spider");
@@ -20,10 +19,10 @@ namespace NovaEdge.Items.SpaceSpooder{
             item.useTime = 30;
             item.useAnimation = 30;
             item.magic = true;
-            item.useStyle = 5;
+            item.useStyle = ItemUseStyleID.HoldingOut;
             item.UseSound = SoundID.Item20;
             item.mana = 14;
-            item.rare = 3;
+            item.rare = ItemRarityID.Orange;
             
         }
     }

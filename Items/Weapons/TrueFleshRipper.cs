@@ -3,6 +3,7 @@ using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
+using Terraria.Graphics.Shaders;
 using NovaEdge.Buffs;
 
 namespace NovaEdge.Items.Weapons {
@@ -15,7 +16,7 @@ namespace NovaEdge.Items.Weapons {
             item.melee = true;
             item.width = 33;
             item.height = 38;
-            item.rare = 5;
+            item.rare = ItemRarityID.Pink;
             item.value = 1200000;
             item.autoReuse = true;
             item.damage = 115;
@@ -24,19 +25,40 @@ namespace NovaEdge.Items.Weapons {
             item.useAnimation = 22;
             item.crit = 4;
             item.knockBack = 5.8f;
-            item.useStyle = 1;
+            item.useStyle = ItemUseStyleID.SwingThrow;
+            item.scale = 1f;
             //item.shoot = ProjectileType<Projectiles.FleshRipperProj>();
             
-            item.scale = 2f;
+            //item.scale = 2f;
         }
         public override void OnHitNPC(Player player , NPC target , int damage , float knockback , bool crit){
             if(Main.rand.NextBool(3)){
                 target.AddBuff(BuffType<OpenWounds>() , 240);
             }
+            for (int i = 0; i < 6; i++)
+            {
+
+                Dust dust;
+                // You need to set position depending on what you are doing. You may need to subtract width/2 and height/2 as well to center the spawn rectangle.
+
+                dust = Main.dust[Terraria.Dust.NewDust(target.Center, 16, 16, 226, Main.rand.NextFloat(-4f, 4f), Main.rand.NextFloat(-4f, 4f), 0, new Color(255, 255, 255), 1f)];
+                if (Main.rand.NextBool(5))
+                {
+                    dust.shader = GameShaders.Armor.GetSecondaryShader(59, Main.LocalPlayer);
+
+                }
+                else
+                {
+                    dust.shader = GameShaders.Armor.GetSecondaryShader(81, Main.LocalPlayer);
+                }
 
 
-            
-            
+
+            }
+
+
+
+
         }
         public override void MeleeEffects(Player player, Rectangle hitbox) {
 			if (Main.rand.NextBool(2)) {
@@ -48,8 +70,8 @@ namespace NovaEdge.Items.Weapons {
         public override void AddRecipes(){
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ItemType<FleshRipper>());
-            recipe.AddIngredient(1570 , 1);
-            recipe.AddTile(134);
+            recipe.AddIngredient(ItemID.BrokenHeroSword , 1);
+            recipe.AddTile(TileID.MythrilAnvil);
             recipe.SetResult(this);
             recipe.AddRecipe();
 
@@ -69,7 +91,7 @@ namespace NovaEdge.Items.Weapons {
                 item.useTime = 22;
                 item.useAnimation = 22;
                 item.damage = 115;
-                item.shoot = 0;
+                item.shoot = ProjectileID.None;
             }
             return base.CanUseItem(player);
         }

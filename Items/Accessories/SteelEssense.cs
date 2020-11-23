@@ -13,7 +13,7 @@ namespace NovaEdge.Items.Accessories
 
         public override void SetDefaults(){
             item.width = item.height = 40;
-            item.rare = 4;
+            item.rare = ItemRarityID.LightRed;
             item.accessory = true;
 
         }

@@ -8,7 +8,7 @@ namespace NovaEdge.Items.Accessories{
             Tooltip.SetDefault("Immunity to Ichor");
         }
         public override void SetDefaults(){
-            item.rare= 4;
+            item.rare= ItemRarityID.LightRed;
             item.value = 820000;
             item.accessory = true;
             item.width = 30;

@@ -5,6 +5,7 @@ using Terraria.Localization;
 using System;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
+using Terraria.Graphics.Shaders;
 using NovaEdge.Items.SpaceSpooder;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -35,6 +36,7 @@ namespace NovaEdge.NPCs.SpaceSpooder
             npc.aiStyle = -1;
             npc.width = 160;
             npc.height = 160;
+           
             //aiType = NPCID.Zombie;
             npc.lifeMax = 15000;
             npc.knockBackResist = 0f;
@@ -80,6 +82,7 @@ namespace NovaEdge.NPCs.SpaceSpooder
         
             Player player = Main.player[npc.target];
             //Despawning , 
+            BoosterDust();
             
 
 
@@ -117,11 +120,11 @@ namespace NovaEdge.NPCs.SpaceSpooder
                 }
                 else if (npc.ai[0] < 735)
                 {
-                    Dash(player, 7, 40, 20);
+                    Dash(player, 8, 40, 20);
                 }
                 else if (npc.ai[0] < 900)
                 {
-                    CircleMotion(player , 4);
+                    CircleMotion(player , 4 , 736);
                     if (npc.ai[0] % 50 == 0)
                     {
                         Shoot(player , npc.Center , ModContent.ProjectileType<HoverMine>() , npc.damage/3 , 3f , 30 , true);
@@ -185,6 +188,25 @@ namespace NovaEdge.NPCs.SpaceSpooder
 
 
             //npc.ai[3] += 1f; //TIMER FOR DASH SUBPHASE
+
+        }
+        private void BoosterDust(int amount = 1)
+        {
+            Vector2 dustPos = npc.Left.RotatedBy(npc.velocity.ToRotation(), npc.Center);
+           
+            Dust dust;
+            for(int i = 0; i < (int)(Math.Abs(npc.velocity.X) +  Math.Abs(npc.velocity.Y))/10 + amount; i++)
+            {
+                dust = Main.dust[Terraria.Dust.NewDust(new Vector2(dustPos.X, dustPos.Y - 20), 16, 16, 226, -npc.velocity.X, -npc.velocity.Y, 0, new Color(255, 255, 255), 1f)];
+                dust.shader = GameShaders.Armor.GetSecondaryShader(38, Main.LocalPlayer);
+            }
+            Dust dust1;
+            for (int i = 0; i < (int)(Math.Abs(npc.velocity.X) + Math.Abs(npc.velocity.Y)) / 10 + amount; i++)
+            {
+                dust1 = Main.dust[Terraria.Dust.NewDust(new Vector2(dustPos.X, dustPos.Y + 20), 16, 16, 226, -npc.velocity.X, -npc.velocity.Y, 0, new Color(255, 255, 255), 1f)];
+                dust1.shader = GameShaders.Armor.GetSecondaryShader(38, Main.LocalPlayer);
+            }
+
 
         }
         private void LaserSpin(Player player)
@@ -370,42 +392,51 @@ namespace NovaEdge.NPCs.SpaceSpooder
 
             }
         }
-        private void CircleMotion(Player player, float speed)
+        Vector2 playerPos = Vector2.Zero;
+
+        //736
+        private void CircleMotion(Player player, float speed , float startAINum)
         {
             if (npc.HasValidTarget && Main.netMode != NetmodeID.MultiplayerClient)
             {
-
+                if(npc.ai[0] == startAINum)
+                {
+                    playerPos = player.Center;
+                }
                 npc.ai[3] += MathHelper.ToRadians(speed);
-                Vector2 circle = player.Center + new Vector2(0, 320).RotatedBy(npc.ai[3]);
-                npc.Center = circle;
-                Vector2 direction = player.Center - npc.Center;
-                direction.Normalize();
-                float rot = direction.ToRotation();
-                npc.rotation = rot;
+                Vector2 circle = playerPos + new Vector2(0, 208).RotatedBy(npc.ai[3]);
+                //npc.Center = circle;
+                Vector2 vel = circle - npc.Center;
+                vel.Normalize();
+                npc.velocity = vel * 12f;
+                //Vector2 direction = player.Center - npc.Center;
+                //direction.Normalize();
+//float rot = direction.ToRotation();
+                npc.rotation = npc.velocity.ToRotation();
 
 
 
             }
 
         }
-        private void Dash(Player player, int velMultiplier, int delay, int cooldownTime)
+        private void Dash(Player player, int velMultiplier, int delay, int cooldownTime )
         {
             dashing = true;
             if (npc.HasValidTarget && Main.netMode != NetmodeID.MultiplayerClient)
             {
-                npc.ai[2]++;
                 if (npc.ai[2] % delay == 0)
                 {
                     oldPlayerPos = player.Center;
                 }
+                npc.ai[2]++;
 
                 if (npc.ai[2] < delay)
                 {
                     Vector2 dashVel = oldPlayerPos - npc.Center;
                     dashVel.Normalize();
-                    npc.velocity.X = dashVel.X * velMultiplier;
-                    npc.velocity.Y = dashVel.Y * velMultiplier;
+                    npc.velocity = dashVel * velMultiplier;
                     npc.rotation = npc.velocity.ToRotation();
+                    
 
 
 
@@ -424,6 +455,7 @@ namespace NovaEdge.NPCs.SpaceSpooder
 
             }
         }
+        
         private void PredictionShot(Player player, float velMult, int type, int damage, float knockBack, int projNum, int spread = 3)
         {
             if (npc.HasValidTarget && Main.netMode != NetmodeID.MultiplayerClient)
@@ -536,7 +568,7 @@ namespace NovaEdge.NPCs.SpaceSpooder
 
             }
         }
-        public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
+       /*public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
         {
             if (dashing)
             {
@@ -544,31 +576,14 @@ namespace NovaEdge.NPCs.SpaceSpooder
                 for (int k = 0; k < npc.oldPos.Length; k++)
                 {
                     Vector2 drawPosition = npc.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, npc.gfxOffY);
-                    Color color = /*.GetAlpha(lightColor)*/ new Color(100, 80, 100) * ((float)(npc.oldPos.Length - k) / (float)npc.oldPos.Length);
-                    spriteBatch.Draw(Main.npcTexture[npc.type], drawPosition, null, color, npc.rotation, drawOrigin, npc.scale, SpriteEffects.None, 0f);
+                    Color color = /*.GetAlpha(lightColor) new Color(100, 80, 100) * ((float)(npc.oldPos.Length - k) / (float)npc.oldPos.Length);
+                    spriteBatch.Draw(Main.npcFr, drawPosition, null, color, npc.rotation, drawOrigin, npc.scale, SpriteEffects.None, 0f);
                 }
             }
             return true;
-        }
-        Vector2 dustPos;
-        private void BoosterDust(int amount, int type, Vector2 vel, bool upper = false)
-        {
-            if (upper)
-            {
-                dustPos = npc.Left.RotatedBy(npc.rotation) + new Vector2(0, -32);
-            }
-            else if (!upper)
-            {
-                dustPos = npc.Left.RotatedBy(npc.rotation) + new Vector2(0, 32);
-            }
-
-            
-            for(int i = 0; i < amount; i++)
-            {
-
-                Dust.NewDustPerfect(dustPos , type , vel);
-            }
-        }
+        } */
+        
+        
         //DR for spinny phase
 
 

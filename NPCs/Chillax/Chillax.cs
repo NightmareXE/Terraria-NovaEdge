@@ -313,10 +313,8 @@ namespace NovaEdge.NPCs.Chillax
             {
                 damage = 1;
 
-                if (projectile.penetrate == 1 || projectile.penetrate == 0)
-                {
-                    projectile.velocity = projectile.velocity * -1; //THis should flip direction
-                }
+                npc.ReflectProjectile(projectile.whoAmI);
+                
 
             }
 

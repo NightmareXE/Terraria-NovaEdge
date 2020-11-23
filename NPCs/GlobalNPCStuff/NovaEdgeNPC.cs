@@ -6,6 +6,7 @@ using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 using NovaEdge.Projectiles;
 using NovaEdge.Buffs;
+using System.Runtime;
 
 namespace NovaEdge.NPCs.GlobalNPCStuff
 {
@@ -63,6 +64,25 @@ namespace NovaEdge.NPCs.GlobalNPCStuff
                 case NPCID.Golem:
                     npc.aiStyle = -1;
                     break;
+                //PILLAR REBALANCE
+                case NPCID.StardustCellBig:
+                    npc.damage = (int)(npc.damage * 0.9f);
+                    npc.lifeMax = (int)(npc.lifeMax * 0.7f);
+                    break;
+                case NPCID.StardustCellSmall:
+                    npc.lifeMax = (int)(npc.lifeMax * 0.5f);
+                    break;
+                case NPCID.StardustWormHead:
+                    npc.lifeMax = (int)(npc.lifeMax * 1.6f);
+                    
+                    break;
+                case NPCID.StardustSpiderBig:
+                    npc.knockBackResist = 0;
+                    break;
+                case NPCID.SolarSolenian:
+                    npc.damage = (int)(npc.damage * 0.85f);
+                    break;
+                
             }
         }
         public override void OnHitByItem(NPC npc, Player player, Item item, int damage, float knockback, bool crit)
@@ -168,6 +188,18 @@ namespace NovaEdge.NPCs.GlobalNPCStuff
         }
         public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
+
+            switch (npc.type)
+            {
+                case NPCID.StardustWormBody:
+                case NPCID.StardustWormHead:
+                case NPCID.StardustWormTail:
+                    if (ProjectileID.Sets.Homing[projectile.type] && !projectile.minion)
+                    {
+                        damage = (int)(damage * 0.7f);
+                    }
+                    break;
+            }
             if (projectile.ranged /* || projectile.type == 440 || projectile.type == 459*/)
             {
                 for (int k = 0; k < 255; k++)
@@ -234,24 +266,19 @@ namespace NovaEdge.NPCs.GlobalNPCStuff
 
 
         }
-        //MANIPULATON TEST
+        
         public override bool PreAI(NPC npc)
         {
             switch (npc.type)
             {
-               
-            }
-            if (npc.type == NPCID.Golem)
-            {
-                if (NovaEdgeWorld.experimentalMode)
-                {
+                case NPCID.SolarSolenian:
                     npc.aiStyle = -1;
-                }
-                else
-                {
-                    npc.aiStyle = 45;
-                }
+                    break;
+                case NPCID.Golem when Main.expertMode:
+                    npc.aiStyle = -1;
+                    break;
             }
+           
             return true;
         }
         public override bool CheckDead(NPC npc)
@@ -273,18 +300,18 @@ namespace NovaEdge.NPCs.GlobalNPCStuff
 
             switch (npc.type)
             {
-                case NPCID.GolemFistLeft:
+                //Uncomplete
+                case NPCID.StardustCellBig:
                     
                     break;
-                 
+                
             }
 
 
 
             if (npc.type == NPCID.Golem)
             {
-                if (NovaEdgeWorld.experimentalMode)
-                {
+                
                     NPC.golemBoss = npc.whoAmI;
                     if (npc.localAI[0] == 0f && Main.netMode != NetmodeID.MultiplayerClient)
                     {
@@ -369,52 +396,8 @@ namespace NovaEdge.NPCs.GlobalNPCStuff
                             }
                         }
                     }
-                    bool sunBeamAttack = false;
-                    npc.ai[2]++;
-                    if (npc.ai[2] > 600)
-                    {
-                        sunBeamAttack = true;
-                        npc.velocity.X *= 0;
-                        npc.velocity.Y += 1f;
-                        if (npc.ai[2] < 720)
-                        {
-                            for (int i = 0; i < 2; i++)
-                            {
-                                Dust.NewDustDirect(npc.Center, npc.width, npc.height, DustID.GoldFlame);
-
-                            }
-                        }
-                        Vector2 laserDestination;
-                        if (npc.ai[2] < 720)
-                        {
-                            Player player = Main.player[npc.target];
-                            Vector2 ProjVelocity = player.Center - npc.Center;
-                            int sign = Math.Sign(player.Center.X - npc.Center.X);
-                            if(sign == -1)
-                            {
-                                npc.ai[3] += 0.02f;
-                                laserDestination = npc.Center + new Vector2(0, 160).RotatedBy(npc.ai[3]);
-                            }
-                            else
-                            {
-                                npc.ai[3] += 0.02f;
-                                laserDestination = npc.Center + new Vector2(0, 160).RotatedBy(-npc.ai[3]);
-                            }
-                            Vector2 vel = laserDestination - new Vector2(npc.Center.X, npc.Center.Y - 32);
-                            vel.Normalize();
-                            if(npc.ai[2] % 10 == 0)
-                            {
-                                Projectile.NewProjectile(new Vector2(npc.Center.X, npc.Center.Y - 32), vel, ProjectileType<GolemSunBeam>(), npc.damage, player.whoAmI);
-
-                            }
-
-                        }
-                        if (npc.ai[2] == 720)
-                        {
-                            npc.ai[2] = 0;
-                        }
-                    }
-                    if (npc.ai[0] == 0f && !sunBeamAttack)
+                    
+                    if (npc.ai[0] == 0f)
                     {
                         //npc code only runs on impact , it is like a counter that scales with the loss of hp and body parts , once npc.ai[0] > 300 , the boss will jump shortly afterwards
                         if (npc.velocity.Y == 0f)
@@ -476,6 +459,7 @@ namespace NovaEdge.NPCs.GlobalNPCStuff
                         {
                             if (npc.velocity.Y == 0f)
                             {
+                                //Boulder code
                                 //Sound for impact of fall
                                 Main.PlaySound(SoundID.Item, (int)npc.position.X, (int)npc.position.Y, 14);
                                 npc.ai[0] = 0f;
@@ -555,7 +539,7 @@ namespace NovaEdge.NPCs.GlobalNPCStuff
                         }
                     }
 
-                }
+                
             }
             switch (npc.type)
             {
@@ -567,17 +551,49 @@ namespace NovaEdge.NPCs.GlobalNPCStuff
             }
 
         }
-        public override void PostAI(NPC npc)
+        private void BoulderRain(Player player , NPC npc , int widthOver2)
         {
-            if (npc.type == NPCID.Golem)
+            if(npc.ai[0] == 1 && npc.velocity.Y == 0)
             {
-                if (NovaEdgeWorld.experimentalMode)
+                for (int i = 0; i < Main.rand.Next(3, 6); i++)
                 {
-                    npc.aiStyle = 45;
+                    Vector2 spawnPosLeft = new Vector2(npc.Center.X + Main.rand.Next(-335, -widthOver2), npc.Center.Y - 384);
+                    Vector2 spawnPosRight = new Vector2(npc.Center.X - Main.rand.Next(-335, -widthOver2), npc.Center.Y - 384);
+                    int projLeftID = Projectile.NewProjectile(spawnPosLeft, Vector2.Zero, ProjectileID.BoulderStaffOfEarth, npc.damage / 2, 6f, Main.myPlayer);
+                    int projRightID = Projectile.NewProjectile(spawnPosRight, Vector2.Zero, ProjectileID.BoulderStaffOfEarth, npc.damage / 2, 6f, Main.myPlayer);
+                    Projectile projLeft = Main.projectile[projLeftID];
+                    Projectile projRight = Main.projectile[projRightID];
+
+                    projLeft.damage = projRight.damage = npc.damage / 2;
+                    projLeft.hostile = projRight.hostile = true;
+                    projLeft.friendly = projRight.friendly = false;
+
+                    bool noTileCollision = projLeft.Center.Y < (npc.Center.Y - 160);
+                    projLeft.tileCollide = projRight.tileCollide = !noTileCollision;
+
                 }
             }
             
-                
+            
+            
+
+        }
+        public override void PostAI(NPC npc)
+        {
+            
+            switch (npc.type)
+            {
+                case NPCID.SolarSolenian:
+                    npc.aiStyle = -1;
+                    
+                    break;
+                case NPCID.Golem when Main.expertMode:
+                    npc.aiStyle = 46;
+                    break;
+            }
+            
+
+
         }
         
         public override void UpdateLifeRegen(NPC npc, ref int damagePerTick)

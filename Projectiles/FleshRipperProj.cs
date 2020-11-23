@@ -202,7 +202,7 @@ namespace NovaEdge.Projectiles{
 			projectile.melee = true;
 			projectile.penetrate = 3;
 			projectile.hide = true;
-			projectile.scale = 1.2f;
+			projectile.scale = 1f;
 		}
 
 		// See ExampleBehindTilesProjectile. 
@@ -258,13 +258,17 @@ namespace NovaEdge.Projectiles{
 				Vector2 rotationVector = (projectile.rotation - MathHelper.ToRadians(90f)).ToRotationVector2();
 				Pos += rotationVector * 16f;
 			for(int k = 0; k < DUST_AMT; k++){
-				Dust dust = Dust.NewDustDirect(Pos , projectile.width , projectile.height , 60);
+				Dust dust;
+				// You need to set position depending on what you are doing. You may need to subtract width/2 and height/2 as well to center the spawn rectangle.
+
+				dust = Main.dust[Terraria.Dust.NewDust(projectile.Center, 16, 16, 226, Main.rand.NextFloat(-4f, 4f), Main.rand.NextFloat(-4f, 4f), 0, new Color(255, 255, 255), 1f)];
+				
 				dust.position = (dust.position + projectile.Center) / 2f;
 				dust.velocity += rotationVector * 2f;
 				dust.velocity *= 0.5f;
 				dust.noGravity = true;
 				dust.scale = 2f;
-				
+				dust.shader = Terraria.Graphics.Shaders.GameShaders.Armor.GetSecondaryShader(59, Main.LocalPlayer);
 				Pos -= rotationVector * 8f;
 			}
 

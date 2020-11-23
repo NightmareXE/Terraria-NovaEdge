@@ -20,7 +20,7 @@ namespace NovaEdge.Items.Weapons
 		
 
 		public override void SetDefaults() {
-			item.useStyle = 5;
+			item.useStyle = ItemUseStyleID.HoldingOut;
 			item.width = 261;
 			item.height = 222;
 			item.useAnimation = 25;
@@ -28,7 +28,7 @@ namespace NovaEdge.Items.Weapons
 			item.shootSpeed = 16f;
 			item.knockBack = 4.2f;
 			item.damage = 38;
-			item.rare = 3;
+			item.rare = ItemRarityID.Orange;
 
 			item.melee = true;
 			item.channel = true;
@@ -42,7 +42,7 @@ namespace NovaEdge.Items.Weapons
 		public override void AddRecipes() {
 			ModRecipe recipe = new ModRecipe(mod);
 			recipe.AddIngredient(ItemID.Ichor , 25);
-			recipe.AddIngredient(3280 , 1);
+			recipe.AddIngredient(ItemID.CrimsonYoyo , 1);
 			recipe.AddTile(TileID.Anvils);
 			recipe.SetResult(this);
 			recipe.AddRecipe();

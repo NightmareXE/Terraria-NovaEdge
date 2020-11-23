@@ -1,6 +1,7 @@
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ID;
+using System;
 using Microsoft.Xna.Framework;
 using NovaEdge.Projectiles.Warhorn;
 
@@ -20,6 +21,7 @@ namespace NovaEdge.Projectiles.Warhorn{
             projectile.penetrate = 300;
             projectile.timeLeft = 130;
             projectile.scale = 1.5f;
+          
             
 
 
@@ -72,4 +74,6 @@ namespace NovaEdge.Projectiles.Warhorn{
 		}*/
        
     }
+    
+	
 }

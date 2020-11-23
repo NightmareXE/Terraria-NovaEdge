@@ -33,8 +33,8 @@ using Terraria;
        ModRecipe recipe = new ModRecipe(mod);
        recipe.AddIngredient(ItemID.FireGauntlet);
        recipe.AddIngredient(ItemID.FrostCore);
-       recipe.AddIngredient(2860 , 10);
-       recipe.AddTile(134);
+       recipe.AddIngredient(ItemID.MartianConduitPlating , 10);
+       recipe.AddTile(TileID.MythrilAnvil);
        recipe.SetResult(this);
        recipe.AddRecipe();
      }

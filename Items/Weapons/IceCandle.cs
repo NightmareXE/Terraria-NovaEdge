@@ -10,7 +10,7 @@ namespace NovaEdge.Items.Weapons{
             item.height = 30;
             item.noMelee = true;
             item.useStyle = ItemUseStyleID.HoldingOut;
-            item.rare = 2;
+            item.rare = ItemRarityID.Green;
             item.magic = true;
             item.damage = 68;
             item.knockBack = 3f;

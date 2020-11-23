@@ -10,7 +10,7 @@ namespace NovaEdge.Items.Weapons
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Peacekeeper");
-            Tooltip.SetDefault("HELL YEAH");
+            Tooltip.SetDefault("Right-Click to fire a shot with reduced spread \nRight and Left-Click at once for even tighter spread ");
 
         }
         public override void SetDefaults(){
@@ -21,11 +21,11 @@ namespace NovaEdge.Items.Weapons
             item.useAnimation = 45;
             item.width = 121;
             item.height = 57;
-            item.rare = 8; //will change later
-            item.shoot = 10;
+            item.rare = ItemRarityID.Yellow; //will change later
+            item.shoot = ProjectileID.PurificationPowder;
             item.shootSpeed = 24f;
             item.ranged = true;
-            item.useStyle = 5;
+            item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
             item.UseSound =  SoundID.Item11;
             item.useAmmo = AmmoID.Bullet;
@@ -35,9 +35,9 @@ namespace NovaEdge.Items.Weapons
         }
         public override void AddRecipes(){
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(2860 , 100);
+            recipe.AddIngredient(ItemID.MartianConduitPlating , 100);
             recipe.AddIngredient(ItemID.Shotgun , 1);
-            recipe.AddTile(134);
+            recipe.AddTile(TileID.MythrilAnvil);
             recipe.SetResult(this);
             recipe.AddRecipe();
         

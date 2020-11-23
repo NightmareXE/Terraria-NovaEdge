@@ -1,12 +1,11 @@
 using Terraria;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
+using Terraria.ID;
 
 namespace NovaEdge.Items.SpaceSpooder{
     public class HoloSpiderProj : ModProjectile{
         //public float dist;
-
-        public override string Texture => "Terraria/Projectile_4";
 
         public override void SetDefaults(){
             projectile.friendly = true;
@@ -14,19 +13,18 @@ namespace NovaEdge.Items.SpaceSpooder{
             projectile.ignoreWater = true;
             projectile.aiStyle = -1;
             projectile.timeLeft = 240;
-            projectile.penetrate = -1;
             projectile.magic = true;
 
         }
         
         public override void AI(){
-            
             projectile.netUpdate = true;
             projectile.ai[0]++;
             
-           
+            
+            
         
-            if(projectile.ai[0] > 60 && projectile.ai[0] % 15 == 0){
+            if(projectile.ai[0] > 60 && projectile.ai[0] % 30 == 0){
                 ShootLaser();
 
             }
@@ -46,15 +44,18 @@ namespace NovaEdge.Items.SpaceSpooder{
             //Vector2 direction = pos - projPos;
             //direction.Normalize();
             for(int i = 0; i < 200; i++){
-
                 if(Main.npc[i].active && !Main.npc[i].dontTakeDamage){
-                     float dist =  Vector2.Distance(Main.npc[i].Center , projPos);
-                     if(dist < 450f){
-                        Vector2 move = Main.npc[i].Center - projPos;
-                        Projectile.NewProjectile(projPos , move , 440 , 50 , 3.7f , Main.myPlayer);
-                    
-                     }
-                    
+                    Vector2 move = Main.npc[i].Center - projPos;
+                    float dist = Vector2.Distance(move, projPos);
+                    if(dist < 640f)
+                    {
+                        Projectile.NewProjectile(projPos, move, ProjectileID.LaserMachinegunLaser, 50, 3.7f, Main.myPlayer);
+
+                    }
+
+
+
+
                 }
             }
         }

@@ -1,0 +1,7 @@
+rm 'VanillaChanges/EdgeGlobalBuff.cs'
+rm 'VanillaChanges/EdgeGlobalItem.cs'
+rm 'VanillaChanges/FireGauntletRecipe.cs'
+rm 'VanillaChanges/PhasesaberProj.cs'
+rm 'VanillaChanges/TerraBeam.png'
+rm 'VanillaChanges/TerraBlade.cs'
+rm 'VanillaChanges/WormScarf.cs'

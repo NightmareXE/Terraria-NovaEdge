@@ -1,11 +1,12 @@
 using Terraria;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
+using Terraria.ID;
 
 
 namespace NovaEdge.NPCs.GrumpyStumpy{
     public class GreenRose : ModProjectile{
-        public override string Texture => "Terraria/Item_535";
+        public override string Texture => "Terraria/Projectile_" + ProjectileID.FlowerPow;
         public override void SetDefaults(){
             projectile.hostile = true;
             projectile.width = projectile.height = 32;
@@ -22,8 +23,8 @@ namespace NovaEdge.NPCs.GrumpyStumpy{
                     Vector2 newMove = Main.player[i].Center - projectile.Center;
                     newMove.Normalize();
                     if(projectile.ai[0] % 45 == 0){
-                        int type = ModContent.ProjectileType<Projectiles.VenomOrb>();
-                        int damage = 15;
+                        int type = ModContent.ProjectileType<RosePetal>();
+                        int damage = projectile.damage/2;
                         Projectile.NewProjectile(projectile.Center , newMove * 9f , type , damage , 4f , Main.myPlayer);
                     }
 

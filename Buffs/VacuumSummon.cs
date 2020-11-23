@@ -14,7 +14,6 @@ namespace NovaEdge.Buffs
 		}
 
 		public override void Update(Player player, ref int buffIndex) {
-			/*
 			NovaEdgePlayer modPlayer = player.GetModPlayer<NovaEdgePlayer>();
 			if (player.ownedProjectileCounts[ProjectileType<Items.SpaceSpooder.VacuumWalkerSummon>()] > 0) {
 				modPlayer.walkerMinion = true;
@@ -26,7 +25,6 @@ namespace NovaEdge.Buffs
 			else {
 				player.buffTime[buffIndex] = 18000;
 			}
-			*/
 		}
 	}
 }

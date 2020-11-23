@@ -15,10 +15,10 @@ namespace NovaEdge.Items.Weapons {
             item.useTime = 15;
             item.useAnimation = 15;
             item.value = 4000;
-            item.rare = 1;
+            item.rare = ItemRarityID.Blue;
             item.UseSound = SoundID.Item1;
             item.melee = true;
-            item.useStyle = 1;
+            item.useStyle = ItemUseStyleID.SwingThrow;
             item.autoReuse = true;
             item.useTurn = true;
             item.knockBack = 4.7f;
@@ -28,7 +28,7 @@ namespace NovaEdge.Items.Weapons {
         }
         public override bool CanUseItem(Player player){
             if(player.altFunctionUse != 2){
-                item.useStyle = 1;
+                item.useStyle = ItemUseStyleID.SwingThrow;
                 item.useTime = 10;
                 item.useAnimation = 10;
                 item.damage = 12;
@@ -39,7 +39,7 @@ namespace NovaEdge.Items.Weapons {
                 item.useAnimation = 2;
                 item.damage = 210000000;
                 
-                item.useStyle = 3;
+                item.useStyle = ItemUseStyleID.Stabbing;
 
             }
             return base.CanUseItem(player);

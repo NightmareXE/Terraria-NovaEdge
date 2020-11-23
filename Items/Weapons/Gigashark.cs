@@ -24,14 +24,14 @@ namespace NovaEdge.Items.Weapons //The name of the namespace should be the direc
             item.useAnimation = 5; //The speed of item's animation , also in ticks
             item.noMelee = true; //Makes the sprite of the gun not do damage
             item.value = 500000; //the price can be set by this.Value is in copper coins
-            item.rare = 6; //sets she rarity of an item. The numbers are weird so i won't go in depth for now
+            item.rare = ItemRarityID.LightPurple; //sets she rarity of an item. The numbers are weird so i won't go in depth for now
             item.knockBack = 1.5f; //the knockback of an item , must be a float value.
             item.UseSound = SoundID.Item11; // the sound an item produces on use. Wiki is useful for finding these IDs , Ttem11 is for gun shoot sound
             item.autoReuse = true; //determines if the weapon has autoswing
             item.shootSpeed = 15f; //firing speed for a ranged weapon
             item.ranged = true; //Sets the class of the item as ranged
-            item.shoot = 5; //this just exists
-            item.useStyle = 5; //There's a lot of different styles , 5 is for guns , bows and staves
+            item.shoot = ProjectileID.JestersArrow; //this just exists
+            item.useStyle = ItemUseStyleID.HoldingOut; //There's a lot of different styles , 5 is for guns , bows and staves
             item.useAmmo = AmmoID.Bullet; //used to determine the type of ammo used by an item , used to classify ranged weapons as guns , bows , rocket launchers, etc
             
         }
@@ -51,19 +51,17 @@ namespace NovaEdge.Items.Weapons //The name of the namespace should be the direc
             recipe.AddIngredient(ItemID.ChainGun , 1); // A method used to add ingredients to a recipe , the first value is the material and the second is the amount
             recipe.AddIngredient(ItemID.Megashark , 1);
             recipe.AddIngredient(ItemID.BeetleShell , 20);
-            recipe.AddTile(134); //Adds a crafting station where this recipe is avaliable
+            recipe.AddTile(TileID.MythrilAnvil); //Adds a crafting station where this recipe is avaliable
             recipe.SetResult(this); //Sets the output from this recipe to this item
             recipe.AddRecipe(); //Adds the recipe to the game lol
         }
 
-        public override bool AltFunctionUse(Player player){
-            return true;
-        }
+        
+        
         public override bool CanUseItem(Player player)
         {
-            if(player.altFunctionUse == 2){
-                player.armorPenetration += 15;
-            }
+            player.GetModPlayer<NovaEdgePlayer>().gigashark = true;
+            
 
             return base.CanUseItem(player);
        }
@@ -79,6 +77,7 @@ namespace NovaEdge.Items.Weapons //The name of the namespace should be the direc
         public override Vector2? HoldoutOffset(){
            return new Vector2(-25 , 0);
         }
+        
        
                 
             

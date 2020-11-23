@@ -5,16 +5,16 @@ using Terraria.ID;
 namespace NovaEdge.Items.Weapons{
     public class PhantomEdge : ModItem{
 
-        public override string Texture => "Terraria/Item_" + ItemID.TrueExcalibur;
+        //public override string Texture => "Terraria/Item_" + ItemID.TrueExcalibur;
         public override void SetDefaults(){
             item.damage = 145;
             item.melee = true;
-            item.useStyle = 3;
+            item.useStyle = ItemUseStyleID.Stabbing;
             item.useTime = 24;
             item.useAnimation = 24;
             item.knockBack = 6f;
             item.value = 100000;
-            item.rare = 6;
+            item.rare = ItemRarityID.LightPurple;
             item.crit = 10;
             item.UseSound = SoundID.Item1;
             item.width = 16;
@@ -27,11 +27,11 @@ namespace NovaEdge.Items.Weapons{
         public override bool CanUseItem(Player player){
            if(player.altFunctionUse != 2){
                item.damage = 145;
-               item.useStyle = 3;
+               item.useStyle = ItemUseStyleID.Stabbing;
            }
            else if(player.altFunctionUse == 2){
                item.damage *= 3;
-               item.useStyle = 1;
+               item.useStyle = ItemUseStyleID.SwingThrow;
                item.CloneDefaults(ItemID.RodofDiscord);
 
            }

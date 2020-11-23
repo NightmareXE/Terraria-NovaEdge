@@ -2,7 +2,7 @@ using Terraria;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 using Terraria.ID;
-using NovaEdge.Items.Ammo;
+//using NovaEdge.Items.Ammo;
 using Microsoft.Xna.Framework;
 using NovaEdge.Projectiles;
 
@@ -18,13 +18,13 @@ namespace NovaEdge.Items.Weapons{
             item.height = 90;
             item.noMelee = true;
             item.ranged = true;
-            item.useStyle = 5;
-            item.rare = 4;
+            item.useStyle = ItemUseStyleID.HoldingOut;
+            item.rare = ItemRarityID.LightRed;
             item.value = 1400000;
             item.UseSound =  SoundID.Item11;
             item.autoReuse = true;
             item.knockBack = 2f;
-            item.shoot = 10;
+            item.shoot = ProjectileID.PurificationPowder;
             item.useAmmo = 283;
             item.shootSpeed = 13f;
             

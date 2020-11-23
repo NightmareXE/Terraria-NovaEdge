@@ -8,7 +8,7 @@ namespace NovaEdge.Items.Accessories{
             Tooltip.SetDefault("Immunity to Cursed Inferno");
         }
         public override void SetDefaults(){ //ADD DETAILS LATER
-            item.rare= 4;
+            item.rare= ItemRarityID.LightRed;
             item.value = 820000;
             item.accessory = true;
             item.width = 30;

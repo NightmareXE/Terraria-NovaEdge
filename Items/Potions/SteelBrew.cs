@@ -20,7 +20,7 @@ namespace NovaEdge.Items.Potions{
             item.useTurn = true;
             item.UseSound = SoundID.Item3;
             item.maxStack = 30;
-            item.rare = 4;
+            item.rare = ItemRarityID.LightRed;
             item.consumable = true;
             item.buffType = BuffType<Buffs.SteelDefense>();
             item.buffTime = 600;

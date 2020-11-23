@@ -1,6 +1,6 @@
 using Terraria;
 using Terraria.ModLoader;
-using NovaEdge.NPCs;
+using NovaEdge.NPCs.GlobalNPCStuff;
 
 namespace NovaEdge.Buffs
 {

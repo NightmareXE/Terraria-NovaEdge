@@ -15,10 +15,10 @@ namespace NovaEdge.Items.BossSummons
         public override void SetDefaults(){
             item.height = 20;
             item.width = 20;
-            item.rare = 4;
+            item.rare = ItemRarityID.LightRed;
             item.maxStack = 20;
             item.useTime = 45;
-            item.useStyle = 4;
+            item.useStyle = ItemUseStyleID.HoldingUp;
             item.useAnimation = 45;
             item.UseSound = SoundID.Item44;
 			item.consumable = true;

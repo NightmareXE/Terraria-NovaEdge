@@ -12,14 +12,14 @@ namespace NovaEdge.Items.Weapons{
             item.damage =  110;
             item.useTime = 24;
             item.useAnimation = 24;
-            item.rare = 6;
+            item.rare = ItemRarityID.LightPurple;
             item.knockBack = 0f;
             item.shoot = ProjectileType<Leech>();
             item.shootSpeed = 16f;
             item.noMelee = true;
             item.melee = true;
             item.noUseGraphic = true;
-            item.useStyle = 1;
+            item.useStyle = ItemUseStyleID.SwingThrow;
             item.width = 16;
             item.UseSound = SoundID.Item1;
             item.height = 16;
